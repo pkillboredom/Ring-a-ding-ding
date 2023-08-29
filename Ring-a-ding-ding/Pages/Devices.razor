@@ -1,0 +1,103 @@
+﻿@page "/devices"
+@using Ring_a_ding_ding.Services
+@inject BTService BTService
+
+<PageTitle>BT Devices</PageTitle>
+
+<h1>BT Devices</h1>
+
+@if (devices == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <InputSelect @bind-Value="selectedDeviceId">
+        @if (devices?.Count == 0)
+        {
+            <option value="">No devices found</option>
+        }
+        else
+        {
+            <option value="">Select a device</option>
+            @foreach (var device in devices!)
+            {
+                <option value="@device.Key">@device.Value</option>
+            }
+        }
+    </InputSelect>
+
+    @if (!string.IsNullOrEmpty(selectedDeviceId))
+    {
+        <p>Selected device: @selectedDeviceId - @devices?[selectedDeviceId]</p>
+        @if (deviceInfo != null)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Device ID</td>
+                        <td>@deviceInfo.DeviceId</td>
+                    </tr>
+                    <tr>
+                        <td>Device Name</td>
+                        <td>@deviceInfo.DeviceName</td>
+                    </tr>
+                    <tr>
+                        <td>ConnectionStatus</td>
+                        <td>@deviceInfo.ConnectionStatus</td>
+                    </tr>
+                    <tr>
+                        <td>Major Device Class</td>
+                        <td>@deviceInfo.DeviceClass.MajorClass</td>
+                    </tr>
+                    <tr>
+                        <td>Minor Device Class</td>
+                        <td>@deviceInfo.DeviceClass.MinorClass</td>
+                    </tr>
+                    <tr>
+                        <td>Service Capabilities</td>
+                        <td>@deviceInfo.DeviceClass.ServiceCapabilities</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button @onclick="OnRingClick">Ring?</button>
+        }
+    }
+
+}
+
+@code {
+    private string? _selectedDeviceId;
+    private string? selectedDeviceId
+    {
+        get => _selectedDeviceId;
+        set { _selectedDeviceId = value; _ = OnSelectedDeviceChanged(); }
+    }
+    private Dictionary<string, string>? devices { get; set; }
+    private BTDeviceInfo? deviceInfo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        devices = await BTService.EnumerateConnectedBluetoothDevicesAsync();
+    }
+
+    private async Task OnSelectedDeviceChanged()
+    {
+        if (!string.IsNullOrEmpty(selectedDeviceId))
+        {
+            deviceInfo = await BTService.GetDeviceInfoAsync(selectedDeviceId);
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnRingClick()
+    {
+        await BTService.TryRingingBTDevice(selectedDeviceId);
+    }
+}
