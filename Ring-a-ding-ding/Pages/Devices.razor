@@ -6,6 +6,7 @@
 
 <h1>BT Devices</h1>
 
+<button @onclick="OnCallClick">Call?</button>
 @if (devices == null)
 {
     <p><em>Loading...</em></p>
@@ -84,7 +85,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        devices = await BTService.EnumerateConnectedBluetoothDevicesAsync();
+        //devices = await BTService.EnumerateConnectedBluetoothDevicesAsync();
     }
 
     private async Task OnSelectedDeviceChanged()
@@ -99,5 +100,10 @@ else
     private async Task OnRingClick()
     {
         await BTService.TryRingingBTDevice(selectedDeviceId);
+    }
+
+    private async Task OnCallClick()
+    {
+        CallService.RingHandsfreeDevice();
     }
 }

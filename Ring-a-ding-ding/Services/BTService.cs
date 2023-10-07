@@ -5,6 +5,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Networking.Sockets;
+using Windows.ApplicationModel.Calls;
 
 namespace Ring_a_ding_ding.Services
 {
@@ -84,6 +85,7 @@ namespace Ring_a_ding_ding.Services
             }
         }
     }
+
 
     public class BTDeviceInfo
     {
