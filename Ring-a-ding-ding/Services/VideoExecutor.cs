@@ -46,7 +46,7 @@ namespace Ring_a_ding_ding.Services
             await KillGrabTheGoblins(cancellationToken);
             await Task.Delay(2000, cancellationToken);
             // Wait until at least 1:03 into the video, then ring phone.
-            logger.LogInformation("Waiting for 0:10 in video to hit lights...");
+            logger.LogInformation("Waiting for 0:26 in video to hit lights...");
             logger.LogInformation("Waiting for 1:03 in video to ring phone...");
             bool RingTimeHit = false;
             bool LightTimeHit = false;
@@ -66,7 +66,7 @@ namespace Ring_a_ding_ding.Services
                     logger.LogInformation("Ringing phone...");
                     CallService.RingHandsfreeDevice();
                 }
-                if (!LightTimeHit && currentTime >= TimeSpan.Parse("00:00:05"))
+                if (!LightTimeHit && currentTime >= TimeSpan.Parse("00:00:26"))
                 {
                     LightTimeHit = true;
                     logger.LogInformation("Hitting Lights...");
