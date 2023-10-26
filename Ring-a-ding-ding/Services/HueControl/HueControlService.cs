@@ -174,7 +174,8 @@ namespace Ring_a_ding_ding.Services.HueControl
                 var request = new UpdateLight()
                     .TurnOn()
                     .SetColor(new RGBColor("00ff2a"))
-                    .SetBrightness(50d);
+                    .SetBrightness(50d)
+                    .SetDuration(0);
                 // get all lights in the room
                 var lightResourceIdentifiers = room.Children;//.Where(rid => rid.Rtype == "light");
                 foreach (var lightDeviceResourceIdentifier in lightResourceIdentifiers)

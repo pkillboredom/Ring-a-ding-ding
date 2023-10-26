@@ -24,7 +24,7 @@ namespace Ring_a_ding_ding.Services
         {
             logger.LogInformation("Launch sequence initiated!");
             // Wait ten seconds and log the countdown every second.
-            for (int i = 1; i > 0; i--)
+            for (int i = 10; i > 0; i--)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -34,15 +34,16 @@ namespace Ring_a_ding_ding.Services
                 logger.LogInformation("T minus {0} seconds", i);
                 await Task.Delay(1000, cancellationToken);
             }
-            logger.LogInformation("Killing Discord...");
-            await KillDiscord(cancellationToken);
-            logger.LogInformation("Killing GrabTheGoblins...");
-            await KillGrabTheGoblins(cancellationToken);
-            await Task.Delay(1000, cancellationToken);
+            //logger.LogInformation("Killing Discord...");
+            //await KillDiscord(cancellationToken);
             // Launch MPC-HC fullscreen, playing "F:\Goblin Film\Final_Party_Edition.mp4"
             logger.LogInformation("Launching MPC-HC...");
-            await LaunchMPCHCWithVideo(@"F:\Goblin Film\Final_Party_Edition.mp4");
-            // Wait 2 seconds to ensure MPC-HC is running.
+            // dont await
+            _ = LaunchMPCHCWithVideo(@"F:\Goblin Film\Final_Party_Edition.mp4");
+            // Wait 0.5 seconds to ensure MPC-HC is running, for best-effort seamlessness.
+            await Task.Delay(500, cancellationToken);
+            logger.LogInformation("Killing GrabTheGoblins...");
+            await KillGrabTheGoblins(cancellationToken);
             await Task.Delay(2000, cancellationToken);
             // Wait until at least 1:03 into the video, then ring phone.
             logger.LogInformation("Waiting for 0:10 in video to hit lights...");
