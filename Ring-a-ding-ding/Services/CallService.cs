@@ -4,8 +4,6 @@ namespace Ring_a_ding_ding.Services
 {
     public class CallService
     {
-
-
         public CallService() { }
 
         public static void RingHandsfreeDevice()

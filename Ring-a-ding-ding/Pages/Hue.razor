@@ -1,0 +1,78 @@
+﻿@page "/hue"
+@using Ring_a_ding_ding.Services.HueControl;
+@inject HueControlService _hueController;
+
+<h3>Hue</h3>
+
+<!--Button to register hue.-->
+<button class="btn btn-primary" @onclick="RegisterHue">Register Hue</button>
+<!--Button to connect hue.-->
+<button class="btn btn-primary" @onclick="ConnectHue">Connect Hue</button>
+<!--Room Id Text Box (Guid)-->
+<input type="text" class="form-control" @bind-value="roomId" />
+<!--Update Room Button-->
+<button class="btn btn-primary" @onclick="UpdateRoom">Update Room</button>
+
+<!--Table of room names and guids.-->
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Room Name</th>
+            <th scope="col">Room Id</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in roomDict)
+        {
+            <tr>
+                <td>@room.Key</td>
+                <td>@room.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private string? registerStatusString = null;
+    private string? connectStatusString = null;
+    private string roomId = string.Empty;
+    private bool userDidRegister = false;
+    private bool registerStatus = false;
+    private bool connectStatus = false;
+    private Dictionary<string, Guid> roomDict = new Dictionary<string, Guid>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _hueController.TryConnectHueHub();
+        if (_hueController.Connected)
+        {
+            roomDict = await _hueController.GetRoomIdPairs();
+        }
+    }
+
+    private async Task RegisterHue()
+    {
+        userDidRegister = true;
+        var result = await _hueController.TryRegisterHueHub();
+        registerStatus = result.Item1;
+        registerStatusString = result.Item2;
+        StateHasChanged();
+    }
+
+    private async Task ConnectHue()
+    {
+        var result = await _hueController.TryConnectHueHub();
+        connectStatus = result.Item1;
+        connectStatusString = result.Item2;
+        if (connectStatus == true)
+            roomDict = await _hueController.GetRoomIdPairs();
+        StateHasChanged();
+    }
+
+    private async Task UpdateRoom()
+    {
+        var guid = new Guid(roomId);
+        var result = _hueController.SetNewRoomId(guid);
+        StateHasChanged();
+    }
+}

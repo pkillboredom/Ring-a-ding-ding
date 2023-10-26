@@ -1,0 +1,33 @@
+﻿body {
+}
+
+button {
+    font-size: 32pt;
+    font-style: oblique;
+    font-weight: bolder;
+}
+
+/* This makes the button have yellow and black diagonal stripes, with white shadow around the text.*/
+button.danger {
+    background: repeating-linear-gradient(
+        45deg,
+        yellow,
+        yellow 10px,
+        gray 10px,
+        gray 20px
+    );
+    color: black;
+    -webkit-text-stroke: 2px white;
+}
+
+button.danger:disabled {
+    background: repeating-linear-gradient(
+        45deg,
+        gray,
+        gray 10px,
+        black 10px,
+        black 20px
+    );
+    color: black;
+    -webkit-text-stroke: 2px white;
+}
