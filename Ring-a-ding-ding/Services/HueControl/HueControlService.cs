@@ -148,7 +148,7 @@ namespace Ring_a_ding_ding.Services.HueControl
             }
         }
 
-        // Set lights to 15% power green
+        // Set lights to 50% power green
         public async Task GoblinModeLighting()
         {
             if (_localHueApi == null)
